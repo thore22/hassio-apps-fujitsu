@@ -1,6 +1,7 @@
-name: Airplay2 Multiroom Audio
-version: 1.01
-slug: airplay_2_multiroom_audio
+name: AirPlay 2 Multiroom Audio (Fujitsu)
+version: "1.01.1"
+slug: airplay_2_multiroom_audio_fujitsu
+url: https://github.com/thore22/hassio-apps-fujitsu/tree/main/airplay_2_multiroom_audio
 description: Create AirPlay 2 receivers from local audio devices, one per pulseaudio physical remap sink output. Remap sinks with automatic or custom names can be created in the Multi-Room Audio Controlle Home Assistand app.
 arch:
   - amd64
@@ -15,3 +16,7 @@ startup: services
 boot: auto
 backup: hot
 stage: experimental
+options:
+  airplay_interface: enp1s0
+schema:
+  airplay_interface: str

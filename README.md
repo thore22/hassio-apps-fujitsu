@@ -1,8 +1,14 @@
-# iVolt1 Home Assistant Addons
+# Fujitsu Home Assistant Audio Apps
+
+Fork of [iVolt1/hassio-apps](https://github.com/iVolt1/hassio-apps), with the
+original GPL-3.0 license and attribution retained. The stable AirPlay 2 app is
+named **AirPlay 2 Multiroom Audio (Fujitsu)** and defaults to LAN interface
+`enp1s0`. The beta app is unchanged. Follow [installation, safe switching,
+verification and rollback](airplay_2_multiroom_audio/FUJITSU.md).
 
 A collection of Home Assistant addons for advanced audio and home automation.
 
-[![Add this repository to your Home Assistant instance.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2FiVolt1%2Fhassio-apps)
+[![Add this repository to your Home Assistant instance.](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fthore22%2Fhassio-apps-fujitsu)
 
 ## Installation
 
@@ -12,9 +18,9 @@ The quickest way is the button above. To add the repository by hand:
 2. Click the menu (⋮) in the top right and select **Repositories**
 3. Add the following URL:
    ```
-   https://github.com/iVolt1/hassio-apps
+   https://github.com/thore22/hassio-apps-fujitsu
    ```
-4. The addons will appear in the store under **iVolt1 Home Assistant Addons**
+4. Install **AirPlay 2 Multiroom Audio (Fujitsu)** under **Fujitsu Audio Apps (based on iVolt1)**.
 
 ## Addons
 
@@ -31,4 +37,4 @@ Requires `host_network` and PulseAudio-backed sound hardware. See the addon's ow
 
 ## Support
 
-Found a bug or have a question? Please [open an issue](https://github.com/iVolt1/hassio_apps/issues) and include the relevant zone log from `/config/shairport-sync/logs/` and the output of `pactl list sinks short`.
+For this fork, report issues at [thore22/hassio-apps-fujitsu](https://github.com/thore22/hassio-apps-fujitsu). Include the relevant zone log and `pactl list sinks short` output. The original project is [iVolt1/hassio-apps](https://github.com/iVolt1/hassio-apps).

@@ -1,5 +1,10 @@
 # AirPlay 2 Multiroom Audio
 
+**Fujitsu fork:** based on [iVolt1/hassio-apps](https://github.com/iVolt1/hassio-apps),
+GPL-3.0. Configure `airplay_interface` (default `enp1s0`) before starting.
+See [FUJITSU.md](FUJITSU.md) for installation, safe switching, validation,
+known Cast latency limits and rollback. The upstream documentation follows.
+
 Turn your existing PulseAudio-backed audio hardware **and** your Google Cast (Chromecast/Google Home) speakers into AirPlay 2 receivers, so you can play to all of them — individually or grouped — from any AirPlay 2 source (iPhone, iPad, Mac).
 
 This addon merges what used to be two separate things — AirPlay 2 receivers for local sound cards, and a bridge that relays AirPlay 2 audio to Google Cast devices — into a single Home Assistant addon.

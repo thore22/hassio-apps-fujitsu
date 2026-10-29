@@ -58,6 +58,8 @@ from pathlib import Path
 import pychromecast
 import zeroconf as zeroconf_lib
 
+from airplay_interface import resolve_interface
+
 log = logging.getLogger("cast_bridge_manager")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [castbridge-manager] %(levelname)s %(message)s")
 
@@ -76,7 +78,7 @@ HTTP_PORT_MAP_FILE = CASTBRIDGE_DIR / "http_port_map.txt"
 # actually part of the config-mismatch problem.
 PIPE_DIR = Path("/media/music/castbridge")
 
-AIRPLAY_INTERFACE = os.environ.get("AIRPLAY_INTERFACE", "enp5s0")
+AIRPLAY_INTERFACE = None  # Resolved and validated in main() before discovery.
 DISCOVERY_TIMEOUT_SECONDS = int(os.environ.get("CAST_DISCOVERY_TIMEOUT", "10"))
 
 # How long to listen for existing _airplay._tcp mDNS advertisers before
@@ -307,6 +309,10 @@ def start_bridge_worker(zone: dict) -> subprocess.Popen:
 
 
 def main():
+    global AIRPLAY_INTERFACE
+    AIRPLAY_INTERFACE = resolve_interface()
+    log.info("Using LAN interface %s (exists) for Shairport Sync mDNS", AIRPLAY_INTERFACE)
+
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
     CASTBRIDGE_DIR.mkdir(parents=True, exist_ok=True)
     PIPE_DIR.mkdir(parents=True, exist_ok=True)

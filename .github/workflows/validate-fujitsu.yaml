@@ -1,0 +1,38 @@
+name: Validate Fujitsu AirPlay app
+on:
+  push:
+    branches: [main]
+    paths: ["airplay_2_multiroom_audio/**", "tests/**", ".github/workflows/validate-fujitsu.yaml", "repository.yaml"]
+  pull_request:
+    paths: ["airplay_2_multiroom_audio/**", "tests/**", ".github/workflows/validate-fujitsu.yaml", "repository.yaml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install PyYAML
+      - name: Check shell and Python syntax
+        run: |
+          bash -n airplay_2_multiroom_audio/generate_airplay2_services.sh
+          bash -n airplay_2_multiroom_audio/run_stage2_hooks.sh
+          python -m compileall -q airplay_2_multiroom_audio tests
+      - name: Check interface handling, generated services and packaging
+        run: python -m unittest discover -s tests -v
+      - name: Build amd64 Home Assistant app
+        run: docker build --progress=plain -t airplay2-fujitsu:test airplay_2_multiroom_audio
+      - name: Check installed runtime and AirPlay 2 build
+        run: |
+          docker run --rm --entrypoint /bin/bash airplay2-fujitsu:test -c '
+            set -e
+            shairport-sync -V 2>&1 | tee /tmp/version
+            grep -i "AirPlay2" /tmp/version
+            command -v nqptp avahi-daemon dbus-daemon ffmpeg
+            python3 -c "import pychromecast, zeroconf, airplay_interface"
+            bash -n /usr/sbin/generate_airplay2_services.sh
+          '

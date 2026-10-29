@@ -62,6 +62,7 @@ RUN pip install --break-system-packages --no-cache-dir -r requirements.txt
 COPY generate_airplay2_services.sh /usr/sbin/generate_airplay2_services.sh
 COPY run_stage2_hooks.sh /usr/sbin/run_stage2_hooks.sh
 COPY cast_bridge_manager.py /usr/sbin/cast_bridge_manager.py
+COPY airplay_interface.py /usr/sbin/airplay_interface.py
 COPY cast_bridge_zone.py /usr/sbin/cast_bridge_zone.py
 RUN chmod +x /usr/sbin/generate_airplay2_services.sh \
              /usr/sbin/run_stage2_hooks.sh

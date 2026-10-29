@@ -14,10 +14,5 @@
 # here as cast_bridge_manager.py instead. There is no longer a second
 # addon or a hand-off file to keep in sync.
 #
-# Deliberately no `set -e`: generate_airplay2_services.sh ends in a
-# `while read ... done < <(cmd)` loop, which always finishes via a
-# failed `read` at EOF — that makes its own exit status non-zero on
-# every normal run, regardless of whether anything actually went
-# wrong. With `set -e` here, that non-zero status would abort this
-# wrapper immediately.
-/usr/sbin/generate_airplay2_services.sh
+# Propagate generation failures (including an invalid LAN interface) to s6.
+exec /usr/sbin/generate_airplay2_services.sh

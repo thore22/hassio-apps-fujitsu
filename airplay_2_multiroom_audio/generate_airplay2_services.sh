@@ -37,10 +37,12 @@ CONTENTS_DIR="${BASE_DIR}/user/contents.d"
 CONFIG_DIR="/config/shairport-sync/config"
 mkdir -p "${CONTENTS_DIR}" "${CONFIG_DIR}"
 
-# Needed early (before the avahi service block below) so avahi-daemon can
-# be restricted to this interface at startup — see the airplay2-avahi
-# service comment for why that restriction matters.
-AIRPLAY_INTERFACE="${AIRPLAY_INTERFACE:-enp5s0}"
+# Resolve once, before changing sinks or generating services. The helper
+# reads /data/options.json (default enp1s0) and rejects missing interfaces.
+# Embed this same validated value in Avahi and the Cast manager's service.
+AIRPLAY_INTERFACE="$(python3 /usr/sbin/airplay_interface.py)" || exit 1
+export AIRPLAY_INTERFACE
+echo "[airplay2] Using LAN interface ${AIRPLAY_INTERFACE} (exists); Avahi and Shairport Sync will advertise here" | tee -a "$log_file"
 
 # --- Bounce master sinks & recreate remap sinks before generating zone services ----------------
 # HDMI (and some other ALSA-card) sinks don't resume cleanly on their own
@@ -369,8 +371,9 @@ if [ ! -d "$CASTBRIDGE_MANAGER_SERVICE" ]; then
     touch "${CASTBRIDGE_MANAGER_SERVICE}/dependencies.d/airplay2-dbus"
     touch "${CASTBRIDGE_MANAGER_SERVICE}/dependencies.d/airplay2-avahi"
     touch "${CASTBRIDGE_MANAGER_SERVICE}/dependencies.d/airplay2-nqptp"
-    cat > "${CASTBRIDGE_MANAGER_SERVICE}/run" <<'EOF'
+    cat > "${CASTBRIDGE_MANAGER_SERVICE}/run" <<EOF
 #!/usr/bin/with-contenv bashio
+export AIRPLAY_INTERFACE="${AIRPLAY_INTERFACE}"
 mkdir -p /config/cast-bridge/logs
 exec python3 /usr/sbin/cast_bridge_manager.py >> /config/cast-bridge/logs/cast_bridge_manager.log 2>&1
 EOF
