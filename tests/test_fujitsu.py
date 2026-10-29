@@ -4,6 +4,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import re
 import shlex
 import shutil
 import subprocess
@@ -110,8 +111,8 @@ class GeneratedConfigTests(unittest.TestCase):
                 path.write_text("#!/bin/sh\n" + body)
                 path.chmod(0o755)
             script = (ADDON / "generate_airplay2_services.sh").read_text()
-            for prefix in ("/etc/", "/config/", "/tmp/"):
-                script = script.replace(prefix, str(root) + prefix)
+            # Replace in one pass: root itself can start with /tmp/.
+            script = re.sub(r"/(?:etc|config|tmp)/", lambda match: str(root) + match.group(), script)
             generated = root / "generate.sh"
             generated.write_text(script)
             env = dict(os.environ, PATH=str(tools) + os.pathsep + os.environ["PATH"])
@@ -169,3 +170,4 @@ class PackagingTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
